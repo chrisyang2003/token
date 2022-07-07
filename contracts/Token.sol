@@ -697,7 +697,11 @@ contract Token is IERC20, ManagerUpgradeable {
     }
 
     // 获取邀请列表
-    function getInviterList(address _user) public returns (address[] memory) {
+    function getInviterList(address _user)
+        public
+        view
+        returns (address[] memory)
+    {
         address[] memory inviterList = new address[](10);
         address tmp = _user;
         for (uint256 i = 0; i < 10; i++) {
@@ -718,7 +722,6 @@ contract Token is IERC20, ManagerUpgradeable {
     ) private {
         require(!userBlackList[from], "blacklist");
         _tOwned[from] = _tOwned[from].sub(amount);
-        uint256 useFee = 0;
 
         bool shouldSetInviter = balanceOf(to) == 0 &&
             inviter[from] == address(0) &&
