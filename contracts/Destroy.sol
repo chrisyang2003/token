@@ -1,13 +1,11 @@
-//SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
+pragma solidity >=0.6.12;
 
-import "hardhat/console.sol";
-
-import {UFTToken} from "./Token.sol";
+import {Token, SafeMath} from "./Token.sol";
 
 contract Destroy {
-    UFTToken token;
+    Token token;
     uint256 burnTotalLeft = 2220;
+    uint256 timelock = 150;
 
     struct burnOrder {
         uint256 amount;
@@ -27,11 +25,39 @@ contract Destroy {
 
         burnOrder memory tmp = burnOrder(_amount, block.timestamp);
         burnOrderList[user].push(tmp);
+
+        // 销毁操作
+        token.transferFrom(user, address(0), _amount);
     }
 
     function canClaim(address _user) public view returns (burnOrder[] memory) {
         uint256 Orderlength = burnOrderList[_user].length;
 
-        burnOrder[] memory orderList = new burnOrder[](Orderlength);
+        burnOrder[] memory list = new burnOrder[](Orderlength);
+
+        for (uint256 i = 0; i < Orderlength; i++) {
+            if (
+                burnOrderList[_user][i].timestamp + timelock * 1 days >
+                block.timestamp
+            ) {
+                list[i] = burnOrderList[_user][i];
+            }
+        }
+        return list;
+    }
+
+    function claim() public {
+        address _user = msg.sender;
+        uint256 Orderlength = burnOrderList[_user].length;
+        uint256 amount;
+        for (uint256 i = 0; i < Orderlength; i++) {
+            if (
+                burnOrderList[_user][i].timestamp + timelock * 1 days >
+                block.timestamp
+            ) {
+                amount = amount + burnOrderList[_user][i].amount;
+            }
+        }
+        token.mint(_user, amount * 2);
     }
 }
