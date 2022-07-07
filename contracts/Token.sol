@@ -477,250 +477,6 @@ library SafeMath {
     }
 }
 
-interface IToothSwapFactory {
-    event PairCreated(
-        address indexed token0,
-        address indexed token1,
-        address pair,
-        uint256
-    );
-
-    function feeTo() external view returns (address);
-
-    function feeToSetter() external view returns (address);
-
-    function migrator() external view returns (address);
-
-    function getPair(address tokenA, address tokenB)
-        external
-        view
-        returns (address pair);
-
-    function allPairs(uint256) external view returns (address pair);
-
-    function allPairsLength() external view returns (uint256);
-
-    function createPair(address tokenA, address tokenB)
-        external
-        returns (address pair);
-
-    function setFeeTo(address) external;
-
-    function setFeeToSetter(address) external;
-
-    function setMigrator(address) external;
-
-    function pairCodeHash() external pure returns (bytes32);
-}
-
-interface IToothSwapRouter {
-    function factory() external view returns (address);
-
-    function company() external pure returns (address);
-
-    function WHT() external pure returns (address);
-
-    function addLiquidity(
-        address tokenA,
-        address tokenB,
-        uint256 amountADesired,
-        uint256 amountBDesired,
-        uint256 amountAMin,
-        uint256 amountBMin,
-        address to,
-        uint256 deadline
-    )
-        external
-        returns (
-            uint256 amountA,
-            uint256 amountB,
-            uint256 liquidity
-        );
-
-    function addLiquidityHT(
-        address token,
-        uint256 amountTokenDesired,
-        uint256 amountTokenMin,
-        uint256 amountHTMin,
-        address to,
-        uint256 deadline
-    )
-        external
-        payable
-        returns (
-            uint256 amountToken,
-            uint256 amountHT,
-            uint256 liquidity
-        );
-
-    function removeLiquidity(
-        address tokenA,
-        address tokenB,
-        uint256 liquidity,
-        uint256 amountAMin,
-        uint256 amountBMin,
-        address to,
-        uint256 deadline
-    ) external returns (uint256 amountA, uint256 amountB);
-
-    function removeLiquidityHT(
-        address token,
-        uint256 liquidity,
-        uint256 amountTokenMin,
-        uint256 amountHTMin,
-        address to,
-        uint256 deadline
-    ) external returns (uint256 amountToken, uint256 amountHT);
-
-    function removeLiquidityWithPermit(
-        address tokenA,
-        address tokenB,
-        uint256 liquidity,
-        uint256 amountAMin,
-        uint256 amountBMin,
-        address to,
-        uint256 deadline,
-        bool approveMax,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external returns (uint256 amountA, uint256 amountB);
-
-    function removeLiquidityHTWithPermit(
-        address token,
-        uint256 liquidity,
-        uint256 amountTokenMin,
-        uint256 amountHTMin,
-        address to,
-        uint256 deadline,
-        bool approveMax,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external returns (uint256 amountToken, uint256 amountHT);
-
-    function swapExactTokensForTokens(
-        uint256 amountIn,
-        uint256 amountOutMin,
-        address[] calldata path,
-        address to,
-        uint256 deadline
-    ) external returns (uint256[] memory amounts);
-
-    function swapTokensForExactTokens(
-        uint256 amountOut,
-        uint256 amountInMax,
-        address[] calldata path,
-        address to,
-        uint256 deadline
-    ) external returns (uint256[] memory amounts);
-
-    function swapExactHTForTokens(
-        uint256 amountOutMin,
-        address[] calldata path,
-        address to,
-        uint256 deadline
-    ) external payable returns (uint256[] memory amounts);
-
-    function swapTokensForExactHT(
-        uint256 amountOut,
-        uint256 amountInMax,
-        address[] calldata path,
-        address to,
-        uint256 deadline
-    ) external returns (uint256[] memory amounts);
-
-    function swapExactTokensForHT(
-        uint256 amountIn,
-        uint256 amountOutMin,
-        address[] calldata path,
-        address to,
-        uint256 deadline
-    ) external returns (uint256[] memory amounts);
-
-    function swapHTForExactTokens(
-        uint256 amountOut,
-        address[] calldata path,
-        address to,
-        uint256 deadline
-    ) external payable returns (uint256[] memory amounts);
-
-    function quote(
-        uint256 amountA,
-        uint256 reserveA,
-        uint256 reserveB
-    ) external pure returns (uint256 amountB);
-
-    function getAmountOut(
-        uint256 amountIn,
-        uint256 reserveIn,
-        uint256 reserveOut,
-        uint8 fee
-    ) external pure returns (uint256 amountOut);
-
-    function getAmountIn(
-        uint256 amountOut,
-        uint256 reserveIn,
-        uint256 reserveOut,
-        uint8 fee
-    ) external pure returns (uint256 amountIn);
-
-    function getAmountsOut(uint256 amountIn, address[] calldata path)
-        external
-        view
-        returns (uint256[] memory amounts);
-
-    function getAmountsIn(uint256 amountOut, address[] calldata path)
-        external
-        view
-        returns (uint256[] memory amounts);
-
-    function removeLiquidityHTSupportingFeeOnTransferTokens(
-        address token,
-        uint256 liquidity,
-        uint256 amountTokenMin,
-        uint256 amountHTMin,
-        address to,
-        uint256 deadline
-    ) external returns (uint256 amountHT);
-
-    function removeLiquidityHTWithPermitSupportingFeeOnTransferTokens(
-        address token,
-        uint256 liquidity,
-        uint256 amountTokenMin,
-        uint256 amountHTMin,
-        address to,
-        uint256 deadline,
-        bool approveMax,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external returns (uint256 amountHT);
-
-    function swapExactTokensForTokensSupportingFeeOnTransferTokens(
-        uint256 amountIn,
-        uint256 amountOutMin,
-        address[] calldata path,
-        address to,
-        uint256 deadline
-    ) external;
-
-    function swapExactHTForTokensSupportingFeeOnTransferTokens(
-        uint256 amountOutMin,
-        address[] calldata path,
-        address to,
-        uint256 deadline
-    ) external payable;
-
-    function swapExactTokensForHTSupportingFeeOnTransferTokens(
-        uint256 amountIn,
-        uint256 amountOutMin,
-        address[] calldata path,
-        address to,
-        uint256 deadline
-    ) external;
-}
-
 abstract contract ManagerUpgradeable is Ownable {
     //Administrator Address Mapping
     mapping(address => bool) public managers;
@@ -770,7 +526,7 @@ abstract contract ManagerUpgradeable is Ownable {
 
 - 设置路由合约为白名单，并且设置不分红属性:0xBba6D427D10d87E29AB1a537F4338E227F5728D4
  */
-contract UFTToken is IERC20, ManagerUpgradeable {
+contract Token is IERC20, ManagerUpgradeable {
     using SafeMath for uint256;
     using Address for address;
     mapping(address => uint256) private _tOwned;
@@ -778,43 +534,24 @@ contract UFTToken is IERC20, ManagerUpgradeable {
 
     // 邀请信息
     mapping(address => address) public inviter;
-    address public _fundAddr;
-    address public _inviteFeeAddr;
-    address[] public _lpAddr;
-    mapping(address => uint256) _lpAddrIndexes;
-    mapping(address => bool) _lpAddrExist;
-    address[] public _tenAddr;
-    mapping(address => uint256) _tenAddrIndexes;
-    address[] public _hundredAddr;
-    mapping(address => uint256) _hundredAddrIndexes;
+
     string private _name;
     string private _symbol;
     uint8 private _decimals;
     uint256 private _tTotal;
-    IToothSwapRouter public swapRouter;
-    address public swapPair;
 
-    mapping(address => bool) public notBonus;
     mapping(address => bool) public whiteList;
-    uint256 public burnTotal;
-    address public chefPool;
     address[] public blacklist;
     mapping(address => uint256) public blacklistIndexes;
     mapping(address => bool) public userBlackList;
-
-    address public chefPool2;
 
     function initialize() public initializer {
         _name = "SPE Token";
         _symbol = "SPE";
         _decimals = 18;
-        swapRouter = IToothSwapRouter(
-            0xBba6D427D10d87E29AB1a537F4338E227F5728D4
-        );
+
         // _tTotal = 10000 * 10**_decimals;
         _tOwned[msg.sender] = _tTotal;
-        _fundAddr = msg.sender;
-        _inviteFeeAddr = msg.sender;
         whiteList[msg.sender] = true;
         __Manager_init();
         emit Transfer(address(0), msg.sender, _tTotal);
@@ -949,7 +686,6 @@ contract UFTToken is IERC20, ManagerUpgradeable {
         require(account != address(0), "ERC20: burn from the zero address");
         _tOwned[account] = _tOwned[account].sub(amount);
         _tTotal = _tTotal.sub(amount);
-        burnTotal = burnTotal.add(amount);
         emit Transfer(account, address(0), amount);
     }
 
@@ -991,293 +727,12 @@ contract UFTToken is IERC20, ManagerUpgradeable {
             inviter[from] = to;
         }
 
-        if (swapPair != address(0) && !notBonus[from]) {
-            if (to == swapPair) {
-                useFee = 10;
-                _takeburnFee(from, amount, 2);
-                _takeLPFee(from, amount, 8);
-            }
-        }
-        if (
-            from != swapPair &&
-            from != address(swapRouter) &&
-            from != address(0) &&
-            from != address(this) &&
-            swapPair != address(0)
-        ) {
-            setlpAddr(from);
-        }
-        if (
-            to != swapPair &&
-            to != address(swapRouter) &&
-            to != address(0) &&
-            to != address(this) &&
-            swapPair != address(0)
-        ) {
-            setlpAddr(to);
-        }
-
-        //如果不在白名单，扣除手续费
-        if (
-            !whiteList[from] &&
-            swapPair != address(0) &&
-            !whiteList[to] &&
-            !Address.isContract(from) &&
-            !Address.isContract(to)
-        ) {
-            useFee = useFee.add(5);
-            // _tOwned[swapPair] = _tOwned[swapPair].add(amount.mul(3).div(100));
-            // emit Transfer(from, swapPair, amount.mul(3).div(100));
-
-            _takeLPFee(from, amount, 3);
-            _takeburnFee(from, amount, 2);
-
-            // burn(from, amount.mul(2).div(100));
-        }
-
-        uint256 recipientRate = 100 - useFee;
-        _tOwned[to] = _tOwned[to].add(amount.mul(recipientRate).div(100));
-        emit Transfer(from, to, amount.mul(recipientRate).div(100));
-    }
-
-    /**
-    @dev 燃烧之后，总供应量要减少
-     */
-    function _takeburnFee(
-        address sender,
-        uint256 amount,
-        uint256 fee
-    ) private {
-        if (fee == 0) return;
-        uint256 burnAmount = amount.div(100).mul(fee);
-        _tOwned[address(0)] = _tOwned[address(0)].add(burnAmount);
-        // todo
-        _tTotal = _tTotal.sub(burnAmount);
-        emit Transfer(sender, address(0), burnAmount);
-    }
-
-    function _takeLPFee(
-        address sender,
-        uint256 amount,
-        uint256 fee
-    ) private {
-        if (fee == 0) return;
-        uint256 lpAmount = amount.div(100).mul(fee);
-        _takeInviterFee(sender, lpAmount, 10);
-        _takeFundFee(sender, lpAmount, 10);
-        _takeTenFee(sender, lpAmount, 10);
-        _takeHundredFee(sender, lpAmount, 10);
-        _takeAddLpFee(sender, lpAmount, 60);
-    }
-
-    function _takeInviterFee(
-        address sender,
-        uint256 amount,
-        uint256 fee
-    ) private {
-        address paddr = inviter[sender];
-        if (paddr == address(0)) {
-            paddr = _inviteFeeAddr;
-        }
-        uint256 takeAmount = amount.div(100).mul(fee);
-        _tOwned[paddr] = _tOwned[paddr].add(takeAmount);
-        emit Transfer(sender, paddr, takeAmount);
-    }
-
-    function _takeFundFee(
-        address sender,
-        uint256 amount,
-        uint256 fee
-    ) private {
-        uint256 takeAmount = amount.div(100).mul(fee);
-        _tOwned[_fundAddr] = _tOwned[_fundAddr].add(takeAmount);
-        emit Transfer(sender, _fundAddr, takeAmount);
-    }
-
-    function _takeTenFee(
-        address sender,
-        uint256 amount,
-        uint256 fee
-    ) private {
-        if (_tenAddr.length == 0) {
-            return;
-        }
-        uint256 avgAmount = amount.div(100).mul(fee).div(_tenAddr.length);
-        for (uint256 i = 0; i < _tenAddr.length; i++) {
-            _tOwned[_tenAddr[i]] = _tOwned[_tenAddr[i]].add(avgAmount);
-            emit Transfer(sender, _tenAddr[i], avgAmount);
-        }
-    }
-
-    function _takeHundredFee(
-        address sender,
-        uint256 amount,
-        uint256 fee
-    ) private {
-        if (_hundredAddr.length == 0) {
-            return;
-        }
-        uint256 avgAmount = amount.div(100).mul(fee).div(_hundredAddr.length);
-        for (uint256 i = 0; i < _hundredAddr.length; i++) {
-            _tOwned[_hundredAddr[i]] = _tOwned[_hundredAddr[i]].add(avgAmount);
-            emit Transfer(sender, _hundredAddr[i], avgAmount);
-        }
-    }
-
-    function _takeAddLpFee(
-        address sender,
-        uint256 amount,
-        uint256 fee
-    ) private {
-        uint256 _lpAddrCount = _lpAddr.length;
-        if (_lpAddrCount == 0) {
-            return;
-        }
-        uint256 takeAmount = amount.div(100).mul(fee);
-        uint256 totalLpSupply = IERC20(swapPair).totalSupply();
-        if (chefPool != address(0)) {
-            totalLpSupply = totalLpSupply.sub(
-                IERC20(swapPair).balanceOf(chefPool)
-            );
-        }
-        if (chefPool2 != address(0)) {
-            totalLpSupply = totalLpSupply.sub(
-                IERC20(swapPair).balanceOf(chefPool2)
-            );
-        }
-        for (uint256 i = 0; i < _lpAddrCount; i++) {
-            if ((_lpAddr[i] != chefPool) && (_lpAddr[i] != chefPool2)) {
-                uint256 currAmount = takeAmount
-                    .mul(IERC20(swapPair).balanceOf(_lpAddr[i]))
-                    .div(totalLpSupply);
-                _distributeLp(sender, _lpAddr[i], currAmount);
-            }
-        }
-    }
-
-    function _distributeLp(
-        address sender,
-        address lpAddr,
-        uint256 amount
-    ) internal {
-        _tOwned[lpAddr] = _tOwned[lpAddr].add(amount);
-        emit Transfer(sender, lpAddr, amount);
-    }
-
-    function setlpAddr(address lpAddr) private {
-        if (swapPair == address(0)) {
-            return;
-        }
-        if (lpAddr == chefPool) {
-            return;
-        }
-        if (_lpAddrExist[lpAddr]) {
-            if (IERC20(swapPair).balanceOf(lpAddr) == 0) quitlpAddr(lpAddr);
-            return;
-        }
-        if (IERC20(swapPair).balanceOf(lpAddr) == 0) return;
-        addlpAddr(lpAddr);
-        _lpAddrExist[lpAddr] = true;
-    }
-
-    function addlpAddr(address lpAddr) internal {
-        _lpAddrIndexes[lpAddr] = _lpAddr.length;
-        _lpAddr.push(lpAddr);
-    }
-
-    function quitlpAddr(address lpAddr) private {
-        removelpAddr(lpAddr);
-        _lpAddrExist[lpAddr] = false;
-    }
-
-    function removelpAddr(address lpAddr) internal {
-        _lpAddr[_lpAddrIndexes[lpAddr]] = _lpAddr[_lpAddr.length - 1];
-        _lpAddrIndexes[_lpAddr[_lpAddr.length - 1]] = _lpAddrIndexes[lpAddr];
-        _lpAddr.pop();
-    }
-
-    function addTenAddr(address[] memory addr) public onlyManagers {
-        for (uint256 i = 0; i < addr.length; i++) {
-            if (addr[i] == address(0)) {
-                continue;
-            }
-            _tenAddrIndexes[addr[i]] = _tenAddr.length;
-            _tenAddr.push(addr[i]);
-        }
-    }
-
-    function removeTenAddr(address[] memory addr) public onlyManagers {
-        for (uint256 i = 0; i < addr.length; i++) {
-            if (addr[i] == address(0)) {
-                continue;
-            }
-            _tenAddr[_tenAddrIndexes[addr[i]]] = _tenAddr[_tenAddr.length - 1];
-            _tenAddrIndexes[_tenAddr[_tenAddr.length - 1]] = _tenAddrIndexes[
-                addr[i]
-            ];
-            _tenAddr.pop();
-        }
-    }
-
-    function addHundredAddr(address[] memory addr) public onlyManagers {
-        for (uint256 i = 0; i < addr.length; i++) {
-            if (addr[i] == address(0)) {
-                continue;
-            }
-            _hundredAddrIndexes[addr[i]] = _hundredAddr.length;
-            _hundredAddr.push(addr[i]);
-        }
-    }
-
-    function removeHundredAddr(address[] memory addr) public onlyManagers {
-        for (uint256 i = 0; i < addr.length; i++) {
-            if (addr[i] == address(0)) {
-                continue;
-            }
-            _hundredAddr[_hundredAddrIndexes[addr[i]]] = _hundredAddr[
-                _hundredAddr.length - 1
-            ];
-            _hundredAddrIndexes[
-                _hundredAddr[_hundredAddr.length - 1]
-            ] = _hundredAddrIndexes[addr[i]];
-            _hundredAddr.pop();
-        }
-    }
-
-    function setDevAddr(address fundAddr, address inviteFeeAddr)
-        public
-        onlyManagers
-    {
-        require(
-            fundAddr != address(0) && inviteFeeAddr != address(0),
-            "can not input zero address"
-        );
-        _fundAddr = fundAddr;
-        _inviteFeeAddr = inviteFeeAddr;
-    }
-
-    function setSwapPair(address addr) public onlyManagers {
-        swapPair = addr;
-    }
-
-    function setNotBonus(address addr, bool isBonus) public onlyManagers {
-        notBonus[addr] = isBonus;
+        _tOwned[to] = _tOwned[to].add(amount);
+        emit Transfer(from, to, amount);
     }
 
     function setWhiteList(address addr, bool isWhite) public onlyManagers {
         whiteList[addr] = isWhite;
-    }
-
-    function setInitBurnTotal(uint256 amount) public onlyManagers {
-        burnTotal = amount;
-    }
-
-    function setChef(address chef) public onlyManagers {
-        chefPool = chef;
-    }
-
-    function setChef2(address chef) public onlyManagers {
-        chefPool2 = chef;
     }
 
     function addBlacklist(address[] memory addr) public onlyManagers {
@@ -1296,25 +751,5 @@ contract UFTToken is IERC20, ManagerUpgradeable {
             }
             userBlackList[addr[i]] = false;
         }
-    }
-
-    function getTenAddrIndexes(address user) public view returns (uint256) {
-        return _tenAddrIndexes[user];
-    }
-
-    function getHundredAddrIndexes(address user) public view returns (uint256) {
-        return _hundredAddrIndexes[user];
-    }
-
-    function getLpAddrExist(address user) public view returns (bool) {
-        return _lpAddrExist[user];
-    }
-
-    function getHundredAddr() public view returns (address[] memory) {
-        return _hundredAddr;
-    }
-
-    function getTenAddr() public view returns (address[] memory) {
-        return _tenAddr;
     }
 }
