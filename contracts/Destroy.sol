@@ -1,49 +1,96 @@
-pragma solidity >=0.6.12;
+pragma solidity >=0.8.4;
 
-import {Token, SafeMath} from "./Token.sol";
+import {ManagerUpgradeable} from "./lib.sol";
+import "hardhat/console.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract Destroy {
-    Token token;
-    uint256 burnTotalLeft = 2220;
-    uint256 timelock = 150;
+contract TestToken is ERC20 {
+    constructor() ERC20("test", "test") {}
+
+    function mint(address user, uint256 amount) public {
+        _mint(user, amount);
+    }
+
+    function burn(address user, uint256 amount) public {
+        _burn(user, amount);
+    }
+}
+
+contract Destroy is ManagerUpgradeable {
+    TestToken token; //
+    uint256 public rate = 2; //
+    uint256 public burnTotalLeft = 2220; //
+    uint256 public timelock = 150;
+    uint256 public interval = 5 seconds;
 
     struct burnOrder {
         uint256 amount;
         uint256 timestamp;
+        uint256 rewarded;
     }
 
     mapping(address => burnOrder[]) public burnOrderList;
 
+    function initialize() public initializer {
+        token = new TestToken();
+    }
+
+    constructor() public {
+        token = new TestToken();
+        token.mint(msg.sender, 1000);
+        token.approve(address(this), 1000);
+    }
+
+    function t1()
+        public
+        view
+        returns (
+            address,
+            uint256,
+            uint256
+        )
+    {
+        return (
+            address(token),
+            token.balanceOf(msg.sender),
+            token.allowance(msg.sender, address(this))
+        );
+    }
+
     function burn(uint256 _amount) public {
         address user = msg.sender;
         require(
-            burnTotalLeft > 0 &&
-                burnTotalLeft > _amount &&
-                token.balanceOf(user) > _amount
+            burnTotalLeft - _amount >= 0 && token.balanceOf(user) >= _amount
         );
         burnTotalLeft = burnTotalLeft - _amount;
 
-        burnOrder memory tmp = burnOrder(_amount, block.timestamp);
+        burnOrder memory tmp = burnOrder(_amount, block.timestamp, 0);
         burnOrderList[user].push(tmp);
 
         // 销毁操作
-        token.transferFrom(user, address(0), _amount);
+        token.burn(user, _amount);
     }
 
-    function canClaim(address _user) public view returns (burnOrder[] memory) {
+    // 查看销毁奖励
+    function rewardsCount(address _user) public view returns (uint256) {
         uint256 Orderlength = burnOrderList[_user].length;
-
-        burnOrder[] memory list = new burnOrder[](Orderlength);
-
+        uint256 reward;
         for (uint256 i = 0; i < Orderlength; i++) {
             if (
-                burnOrderList[_user][i].timestamp + timelock * 1 days >
-                block.timestamp
+                burnOrderList[_user][i].rewarded <
+                burnOrderList[_user][i].amount * rate
             ) {
-                list[i] = burnOrderList[_user][i];
+                uint256 burnDays = (block.timestamp -
+                    burnOrderList[_user][i].timestamp) / interval;
+
+                uint256 tmp = burnOrderList[_user][i].amount *
+                    rate *
+                    (burnDays / timelock) -
+                    burnOrderList[_user][i].rewarded;
+                reward = reward + tmp;
             }
         }
-        return list;
+        return reward;
     }
 
     function claim() public {
@@ -58,6 +105,6 @@ contract Destroy {
                 amount = amount + burnOrderList[_user][i].amount;
             }
         }
-        token.mint(_user, amount * 2);
+        token.mint(_user, amount * rate);
     }
 }
